@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บทเรียนออนไลน์: ส่วนประกอบของเลือดและการทดสอบหมู่เลือด</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white min-h-screen font-kanit">
+
+    <div id="loadingOverlay" class="fixed inset-0 bg-slate-900/80 z-50 hidden flex-col justify-center items-center backdrop-blur-sm">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-rose-500 mb-4"></div>
+        <p id="loadingText" class="text-lg font-medium">กำลังดำเนินการ...</p>
+    </div>
+
+    <div id="modalOverlay" class="fixed inset-0 bg-black/60 z-40 hidden flex-col justify-center items-center p-4 backdrop-blur-sm">
+        <div id="modalContent" class="glass-panel w-full max-w-md p-6 rounded-2xl animate-pop text-center">
+            <h3 id="modalTitle" class="text-2xl font-bold mb-4 text-emerald-400">Title</h3>
+            <p id="modalBody" class="mb-6 text-slate-200">Message</p>
+            <div id="modalActions" class="flex justify-center gap-4">
+                </div>
+        </div>
+    </div>
+
+    <main id="loginPage" class="page active flex-col justify-center items-center p-4 min-h-screen">
+        <div class="glass-panel w-full max-w-md p-8 rounded-3xl shadow-2xl">
+            <div class="text-center mb-8">
+                <i class="fa-solid fa-droplet text-5xl text-rose-500 mb-4 drop-shadow-lg"></i>
+                <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-purple-400">บทเรียนออนไลน์</h1>
+                <p class="text-slate-300 text-sm mt-2">เรื่อง ส่วนประกอบของเลือดและการทดสอบหมู่เลือด</p>
+            </div>
+            
+            <form id="loginForm" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium mb-1">ชื่อ-นามสกุล (เช่น นายใจดี ใจเย็น)</label>
+                    <input type="text" id="studentName" required class="w-full bg-slate-800/50 border border-slate-600 rounded-lg px-4 py-3 focus:outline-none focus:border-rose-500 transition">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">ห้องเรียน</label>
+                        <select id="studentClass" required class="w-full bg-slate-800/50 border border-slate-600 rounded-lg px-4 py-3 focus:outline-none focus:border-rose-500 transition">
+                            <option value="">เลือกห้อง</option>
+                            <option value="ม.4/1">ม.4/1</option><option value="ม.4/2">ม.4/2</option><option value="ม.4/3">ม.4/3</option>
+                            <option value="ม.5/1">ม.5/1</option><option value="ม.5/2">ม.5/2</option><option value="ม.5/3">ม.5/3</option>
+                            <option value="ม.6/1">ม.6/1</option><option value="ม.6/2">ม.6/2</option><option value="ม.6/3">ม.6/3</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">เลขที่</label>
+                        <input type="number" id="studentRoll" min="1" max="50" required class="w-full bg-slate-800/50 border border-slate-600 rounded-lg px-4 py-3 focus:outline-none focus:border-rose-500 transition font-poppins">
+                    </div>
+                </div>
+                <div class="flex items-start gap-3 mt-4 bg-slate-800/30 p-3 rounded-lg border border-slate-700">
+                    <input type="checkbox" id="pdpaConsent" required class="mt-1 w-5 h-5 accent-rose-500 cursor-pointer">
+                    <label for="pdpaConsent" class="text-xs text-slate-300 leading-tight cursor-pointer">
+                        ข้าพเจ้ายินยอมให้ระบบจัดเก็บข้อมูลส่วนบุคคล (ชื่อ ห้อง เลขที่ และคะแนน) เพื่อใช้ในการประเมินผลการเรียนตามนโยบาย PDPA
+                    </label>
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-600 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transform transition active:scale-95">
+                    เข้าสู่ระบบ
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <header id="mainHeader" class="hidden fixed top-0 w-full z-30 glass-panel border-b border-slate-700 px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-user-graduate text-emerald-400"></i>
+            <span id="displayUserName" class="font-medium text-sm truncate max-w-[150px]">ชื่อผู้ใช้</span>
+        </div>
+        <button id="logoutBtn" class="text-xs bg-slate-800 hover:bg-rose-600 border border-slate-600 hover:border-rose-500 px-3 py-1.5 rounded-full transition flex items-center gap-1">
+            <i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ
+        </button>
+    </header>
+
+    <main id="homePage" class="page flex-col items-center p-4 pt-20 pb-10 min-h-screen">
+        <div class="w-full max-w-md space-y-4">
+            <h2 class="text-xl font-bold mb-6 text-center">ยินดีต้อนรับเข้าสู่บทเรียนออนไลน์</h2>
+            
+            <div id="menuContainer" class="space-y-3 relative">
+                <div class="absolute left-6 top-6 bottom-6 w-0.5 bg-slate-700 z-0"></div>
+
+                <button data-target="preTest" class="menu-btn glass-panel w-full relative z-10 flex items-center p-4 rounded-xl border border-emerald-500/50 hover:bg-slate-800/80 transition text-left group">
+                    <div class="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl shrink-0 mr-4 shadow-[0_0_15px_rgba(52,211,153,0.3)]">
+                        <i class="fa-solid fa-file-pen"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <h3 class="font-bold text-emerald-300">แบบทดสอบก่อนเรียน</h3>
+                        <p class="text-xs text-slate-400">Pre-test (10 ข้อ)</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-500 group-hover:text-white transition"></i>
+                </button>
+
+                <button data-target="lesson1" class="menu-btn locked glass-panel w-full relative z-10 flex items-center p-4 rounded-xl border border-slate-700 text-left">
+                    <div class="w-12 h-12 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center text-xl shrink-0 mr-4">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <div class="flex-grow opacity-50">
+                        <h3 class="font-bold">บทเรียน 1: ส่วนประกอบของเลือด</h3>
+                    </div>
+                </button>
+
+                <button data-target="lesson2" class="menu-btn locked glass-panel w-full relative z-10 flex items-center p-4 rounded-xl border border-slate-700 text-left">
+                    <div class="w-12 h-12 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center text-xl shrink-0 mr-4">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <div class="flex-grow opacity-50">
+                        <h3 class="font-bold">บทเรียน 2: กลไกการแข็งตัว</h3>
+                    </div>
+                </button>
+
+                <button data-target="lesson3" class="menu-btn locked glass-panel w-full relative z-10 flex items-center p-4 rounded-xl border border-slate-700 text-left">
+                    <div class="w-12 h-12 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center text-xl shrink-0 mr-4">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <div class="flex-grow opacity-50">
+                        <h3 class="font-bold">บทเรียน 3: การให้และรับเลือด</h3>
+                    </div>
+                </button>
+
+                <button data-target="postTest" class="menu-btn locked glass-panel w-full relative z-10 flex items-center p-4 rounded-xl border border-slate-700 text-left">
+                    <div class="w-12 h-12 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center text-xl shrink-0 mr-4">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <div class="flex-grow opacity-50">
+                        <h3 class="font-bold">แบบทดสอบหลังเรียน</h3>
+                        <p class="text-xs text-slate-400">Post-test (10 ข้อ)</p>
+                    </div>
+                </button>
+
+                <button data-target="gameLab" class="menu-btn locked glass-panel w-full relative z-10 flex items-center p-4 rounded-xl border border-slate-700 text-left">
+                    <div class="w-12 h-12 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center text-xl shrink-0 mr-4">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <div class="flex-grow opacity-50">
+                        <h3 class="font-bold">เกมแล็บทดสอบเลือด</h3>
+                        <p class="text-xs text-slate-400">เหลือโควตา: <span id="quotaDisplay">3</span>/3 ครั้ง</p>
+                    </div>
+                </button>
+
+                <button data-target="results" class="menu-btn locked glass-panel w-full relative z-10 flex items-center p-4 rounded-xl border border-slate-700 text-left">
+                    <div class="w-12 h-12 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center text-xl shrink-0 mr-4">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <div class="flex-grow opacity-50">
+                        <h3 class="font-bold text-amber-400">ผลการเรียนรวม</h3>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <main id="testPage" class="page flex-col p-4 pt-20 pb-20 min-h-screen">
+        <div class="w-full max-w-lg mx-auto h-full flex flex-col">
+            <div class="glass-panel p-4 rounded-xl flex justify-between items-center mb-4">
+                <div class="font-bold text-lg"><span id="currentQNum">1</span>/10</div>
+                <div class="text-rose-400 font-poppins font-bold flex items-center gap-2">
+                    <i class="fa-regular fa-clock"></i> <span id="testTimer">30:00</span>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 rounded-2xl flex-grow mb-4 flex flex-col">
+                <h3 id="questionText" class="text-lg font-medium mb-6 flex-grow-0">คำถามจะแสดงที่นี่?</h3>
+                <div id="choicesContainer" class="space-y-3 flex-grow">
+                    </div>
+            </div>
+
+            <div class="fixed bottom-0 left-0 w-full glass-panel p-4 flex justify-between items-center z-20 max-w-lg mx-auto right-0 rounded-t-2xl">
+                <button id="btnPrevQ" class="px-5 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 disabled:opacity-50">ก่อนหน้า</button>
+                <button id="btnNextQ" class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 font-bold">ถัดไป</button>
+            </div>
+        </div>
+    </main>
+
+    <main id="lessonPage" class="page flex-col items-center p-4 pt-20 pb-10 min-h-screen">
+        <div class="w-full max-w-md glass-panel p-6 rounded-2xl">
+            <h2 id="lessonTitle" class="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">ชื่อบทเรียน</h2>
+            <div id="lessonContent" class="space-y-4 text-slate-200 leading-relaxed mb-8">
+                </div>
+            <button id="btnFinishLesson" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:scale-[1.02] transition">
+                <i class="fa-solid fa-check-circle mr-2"></i> อ่านจบแล้ว กลับหน้าหลัก
+            </button>
+        </div>
+    </main>
+
+    <main id="gamePage" class="page flex-col items-center p-2 pt-16 pb-10 min-h-screen bg-slate-900">
+        <div class="w-full max-w-md h-full flex flex-col">
+            <div class="flex justify-between items-center p-3 glass-panel rounded-xl mb-4">
+                <div class="bg-slate-800 px-3 py-1 rounded-lg">
+                    รอบ: <span id="gameRoundDisplay" class="font-poppins font-bold text-amber-400">1/10</span>
+                </div>
+                <div class="bg-slate-800 px-3 py-1 rounded-lg text-rose-400">
+                    <i class="fa-solid fa-stopwatch"></i> <span id="gameTimer" class="font-poppins font-bold">15</span>s
+                </div>
+                <button id="btnCancelGame" class="text-xs bg-rose-900/50 text-rose-300 px-2 py-1 rounded hover:bg-rose-600 hover:text-white transition">
+                    ยกเลิก (เสียโควตา)
+                </button>
+            </div>
+
+            <div class="flex-grow glass-panel rounded-2xl p-4 flex flex-col items-center relative overflow-hidden bg-gradient-to-b from-slate-800/50 to-slate-900/80 border-slate-600">
+                <h3 class="text-center font-bold text-slate-300 mb-6">จงวิเคราะห์หมู่เลือดจากผลการหยดน้ำยา</h3>
+                
+                <div class="flex justify-center gap-10 mb-8 mt-4">
+                    <div id="bottleA" class="bottle cursor-pointer flex flex-col items-center group">
+                        <div class="w-6 h-7 bg-slate-300 rounded-t-full z-10 border-2 border-b-0 border-slate-400 group-hover:-translate-y-1 transition duration-300 shadow-inner"></div>
+                        <div class="w-10 h-4 bg-slate-600 rounded-sm z-10 border border-slate-500 group-hover:-translate-y-1 transition duration-300"></div>
+                        <div class="w-20 h-24 bg-gradient-to-b from-blue-400/90 to-blue-600/90 rounded-xl flex items-center justify-center border-2 border-white/40 shadow-[0_0_20px_rgba(59,130,246,0.6)] backdrop-blur-sm -mt-1 group-hover:-translate-y-1 transition duration-300 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/30 to-transparent rounded-t-xl"></div>
+                            <span class="font-bold text-white text-lg tracking-wide drop-shadow-md z-10">Anti-A</span>
+                        </div>
+                        <p class="text-xs mt-3 text-slate-400 group-hover:text-blue-400 transition font-medium">คลิกเพื่อหยด</p>
+                    </div>
+                    
+                    <div id="bottleB" class="bottle cursor-pointer flex flex-col items-center group">
+                        <div class="w-6 h-7 bg-slate-300 rounded-t-full z-10 border-2 border-b-0 border-slate-400 group-hover:-translate-y-1 transition duration-300 shadow-inner"></div>
+                        <div class="w-10 h-4 bg-slate-600 rounded-sm z-10 border border-slate-500 group-hover:-translate-y-1 transition duration-300"></div>
+                        <div class="w-20 h-24 bg-gradient-to-b from-amber-400/90 to-amber-600/90 rounded-xl flex items-center justify-center border-2 border-white/40 shadow-[0_0_20px_rgba(245,158,11,0.6)] backdrop-blur-sm -mt-1 group-hover:-translate-y-1 transition duration-300 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/30 to-transparent rounded-t-xl"></div>
+                            <span class="font-bold text-white text-lg tracking-wide drop-shadow-md z-10">Anti-B</span>
+                        </div>
+                        <p class="text-xs mt-3 text-slate-400 group-hover:text-amber-400 transition font-medium">คลิกเพื่อหยด</p>
+                    </div>
+                </div>
+
+                <div class="w-full bg-slate-200/90 rounded-xl p-4 shadow-inner relative flex justify-around items-center border-2 border-slate-300">
+                    <div class="flex flex-col items-center">
+                        <span class="text-slate-800 font-bold text-xs mb-2">สไลด์ 1</span>
+                        <div class="w-16 h-16 rounded-full border-2 border-slate-400 bg-white shadow-inner relative overflow-hidden flex items-center justify-center">
+                            <div id="bloodDrop1" class="w-12 h-12 rounded-full bg-red-600/90 hidden transition-all duration-500"></div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="text-slate-800 font-bold text-xs mb-2">สไลด์ 2</span>
+                        <div class="w-16 h-16 rounded-full border-2 border-slate-400 bg-white shadow-inner relative overflow-hidden flex items-center justify-center">
+                            <div id="bloodDrop2" class="w-12 h-12 rounded-full bg-red-600/90 hidden transition-all duration-500"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="w-full mt-auto pt-6 grid grid-cols-4 gap-2">
+                    <button class="ans-btn bg-slate-700 hover:bg-slate-600 disabled:opacity-30 disabled:cursor-not-allowed py-3 rounded-lg font-bold font-poppins text-lg border border-slate-500" data-ans="A" disabled>A</button>
+                    <button class="ans-btn bg-slate-700 hover:bg-slate-600 disabled:opacity-30 disabled:cursor-not-allowed py-3 rounded-lg font-bold font-poppins text-lg border border-slate-500" data-ans="B" disabled>B</button>
+                    <button class="ans-btn bg-slate-700 hover:bg-slate-600 disabled:opacity-30 disabled:cursor-not-allowed py-3 rounded-lg font-bold font-poppins text-lg border border-slate-500" data-ans="AB" disabled>AB</button>
+                    <button class="ans-btn bg-slate-700 hover:bg-slate-600 disabled:opacity-30 disabled:cursor-not-allowed py-3 rounded-lg font-bold font-poppins text-lg border border-slate-500" data-ans="O" disabled>O</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <main id="resultsPage" class="page flex-col items-center p-4 pt-20 pb-10 min-h-screen">
+        <div class="w-full max-w-md space-y-4">
+            <h2 class="text-2xl font-bold mb-6 text-center text-amber-400">สรุปผลการเรียน</h2>
+            
+            <div class="glass-panel p-5 rounded-2xl grid grid-cols-2 gap-4 text-center">
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-600">
+                    <p class="text-sm text-slate-400">Pre-test</p>
+                    <p class="text-3xl font-poppins font-bold text-slate-200 mt-1" id="resPre">0<span class="text-lg">/10</span></p>
+                </div>
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-600">
+                    <p class="text-sm text-slate-400">Post-test</p>
+                    <p class="text-3xl font-poppins font-bold text-emerald-400 mt-1" id="resPost">0<span class="text-lg">/10</span></p>
+                </div>
+                <div class="col-span-2 bg-slate-800/50 p-4 rounded-xl border border-slate-600 mt-2">
+                    <p class="text-sm text-slate-400 mb-1">พัฒนาการเรียนรู้</p>
+                    <p class="text-lg font-bold text-blue-400" id="resDev">กำลังประมวลผล...</p>
+                </div>
+            </div>
+
+            <div class="glass-panel p-5 rounded-2xl text-center border border-amber-500/30">
+                <p class="text-sm text-slate-400 mb-2">คะแนนสูงสุดจากเกมแล็บ (Game Lab)</p>
+                <div class="w-24 h-24 mx-auto rounded-full border-4 border-amber-500 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.2)]">
+                    <p class="text-4xl font-poppins font-bold text-amber-400" id="resGame">0</p>
+                </div>
+            </div>
+
+            <button id="btnSaveToSheets" class="w-full mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-4 px-4 rounded-xl shadow-lg hover:scale-[1.02] transition flex justify-center items-center gap-2">
+                <i class="fa-solid fa-cloud-arrow-up"></i> บันทึกผลลง Google Sheets
+            </button>
+            <p id="saveStatus" class="text-center text-sm text-emerald-400 hidden mt-2">บันทึกข้อมูลสำเร็จแล้ว!</p>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
