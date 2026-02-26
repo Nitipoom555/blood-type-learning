@@ -813,3 +813,8 @@ const saveToGoogleSheets = () => {
         );
     });
 };
+
+// คำสั่งปุ่มย้อนกลับจากหน้าผลการเรียน
+document.getElementById('btnBackFromResults').addEventListener('click', () => {
+    showPage('homePage');
+});
