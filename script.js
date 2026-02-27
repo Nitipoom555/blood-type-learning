@@ -313,15 +313,15 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
     const name = document.getElementById('studentName').value;
     const sClass = document.getElementById('studentClass').value;
     const roll = document.getElementById('studentRoll').value;
-    const consent = document.getElementById('pdpaConsent').checked;
 
-    if(!name || !sClass || !roll || !consent) return;
+    // ตรวจสอบแค่ ชื่อ, ห้อง, และเลขที่
+    if(!name || !sClass || !roll) return;
 
     showLoader("กำลังเข้าสู่ระบบ...");
     // Mock API call delay
     setTimeout(() => {
         state.user = { name, class: sClass, roll };
-        saveSession();
+        saveSession(); // บันทึกลง localStorage ตามที่แก้ไว้ล่าสุด
         hideLoader();
         showPage('homePage');
     }, 800);
